@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <cctype>
+#include <limits.h>
+#include <iomanip> //for setw()
 
 using namespace	std;
 
@@ -22,8 +24,8 @@ struct player {
 	string		name;
 	string		idNum;
 	int			age;
-	string		contactNum;
-	string		category;
+	int 		contactNum;
+	int			category;
 	string		feeType;
 	double		fee;
 };
@@ -69,14 +71,24 @@ double calculateFee(int type, string feeType) {
     return fee;
 }
 
+static void printSummaryHeader() {
+	cout << CYAN;
+    cout << "------------------------------------------------------------------\n";
+    cout << setw(15) << left << "Name" << setw(20) << left << "IC/Passport.No" 
+         << setw(5)  << left << "Age" << setw(15) << left << "Contact.No" 
+         << setw(10) << left << "Fee" << endl;
+    cout << "------------------------------------------------------------------\n";
+	cout << RESET;
+}
+
 //displays the participant details
 static void	printSummary(const player &p)
 {
-	cout << CYAN << "Name: " << RESET << p.name << endl;
-	cout << CYAN << "IC / Passport Number: " << RESET << p.idNum << endl;
-	cout << CYAN << "Age: " << RESET << p.age << endl;
-	cout << CYAN << "Contact Number: " << RESET << p.contactNum << endl;
-	cout << CYAN << "Fee: RM " << p.fee << RESET << endl;
+	cout << CYAN;
+    cout << setw(15) << left << p.name << setw(20) << left << p.idNum 
+         << setw(5)  << left << p.age << setw(15) << left << p.contactNum 
+         << setw(10) << left << p.fee << endl;
+	cout << RESET;
 }
 
 int main() {
@@ -86,9 +98,6 @@ int main() {
 	
 	while (c == 'y') {
 		player p;
-		int category;
-		string feeType;
-		std::string name;
 		std::string tempInput;
 
 		cout << "Enter participant name: ";
@@ -96,7 +105,6 @@ int main() {
 		getline(cin, p.name);
 		cout << "Enter IC or Passport Number: ";
 		cin >> p.idNum;
-		// getline(cin, p.idNum);
 		cout << "Enter age: ";
         cin >> tempInput;
 		while (!isNum(tempInput) || stoi(tempInput) <= 0 || stoi(tempInput) > 100)
@@ -110,7 +118,7 @@ int main() {
 		tempInput = '\0';//resets for contact number input
         cout << "Enter contact number: ";
 		cin >> tempInput;
-		while (!isNum(tempInput))
+		while (!isNum(tempInput) || stoi(tempInput) < 1 || stoi(tempInput) > INT_MAX)
 		{
 			cout << RED << "Invalid contact number!" << RESET << endl;
 			cout << "Enter contact number: ";
@@ -118,32 +126,33 @@ int main() {
 			cin >> tempInput;
 		}
 		p.contactNum = stoi(tempInput);
-		// cin.ignore();
-        // getline(cin, p.contactNum);
-
+		tempInput = '\0';
+		
 		//displays the Category and Price for the run
 		displayPrice();
 
 		cout << "Select category (1 - 5): ";
-		cin >> category;
-		while (!(category >= 1 && category <= 5))
+		cin >> tempInput;
+		while (!isNum(tempInput) || stoi(tempInput) < 1 || stoi(tempInput) > 5)
 		{
 			cout << RED << "Invalid Category!" << RESET << endl;
 			cout << "Select category (1 - 5): ";
-			cin >> category;
+			tempInput = '\0';
+			cin >> tempInput;
 		}
-
+		p.category = stoi(tempInput);
 		cout << "Enter fee type (early/normal): ";
-		cin >> feeType;
-		while (feeType != "early" && feeType != "normal")
+		cin >> p.feeType;
+		while (p.feeType != "early" && p.feeType != "normal")
 		{
 			cout << RED << "Invalid fee type!" << RESET << endl;
 			cout << "Enter fee type (early/normal): ";
-			cin >> feeType;
+			cin >> p.feeType;
 		}
-		p.fee = calculateFee(category, feeType);
+		p.fee = calculateFee(p.category, p.feeType);
 		totalFee += p.fee;
 		players.push_back(p);
+		printSummaryHeader();
 		printSummary(p);
 		//check whether to add more participants
 		cout << BLUE << "Do you want to add another participant? (y/n): " << RESET;
@@ -157,7 +166,7 @@ int main() {
 
 		if (c == 'n')
 		{
-			cout << "Registration Summary" << endl;
+			printSummaryHeader();
 			for (int i = 0; i < players.size(); i++) {
 				cout << MAGENTA << "Participant " << i + 1 << RESET << endl;
 				printSummary(players[i]);
