@@ -1,4 +1,6 @@
 #include <iostream>
+#include <iomanip>//for setprecision() func
+
 using namespace std;
 
 // function to display race categories and prices
@@ -15,9 +17,9 @@ static void displayPrice() {
 }
 
 // function to determine the fee based on category and fee type
-int getFee(std::string feeType, int category)
+double getFee(std::string feeType, int category)
 {
-	int fee;
+	double fee;
 
 	fee = 0;
 	if (category == 1 || category == 2)
@@ -80,8 +82,8 @@ int main()
 {
 	bool		loop;
 	double		totalFee;
+	double		fee;
 	int			age;
-	int			fee;
 	int			category;
 	int			familyMember;
 	std::string name;
@@ -116,8 +118,9 @@ int main()
 		}
 		fee = getFee(feeType, category);//calls getFee function to get the fee respectively
 		//prompts the user to select category
-		cout << "Category:" << endl;
+		cout << endl << "Category:" << endl;
 		cout << category << getRunDetails(category) << feeType << "]" << endl;
+		cout << fixed << setprecision(2); // Ensure 2 decimal place and will be fixed for every double cout
 		cout << "Fee is RM" << fee << endl;
 		if (category == 5)
 		{
@@ -143,7 +146,7 @@ int main()
                 }
                 cout << "Contact Number: ";
                 cin >> contactNum;
-                cout << "Family Member " << i << " Details Recorded.\n";
+                cout << endl << "Family Member " << i << " Details Recorded.\n";
             }
 		}
 		else
@@ -162,12 +165,11 @@ int main()
   			}
 			cout << "Enter Contact Number: ";
 			cin >> contactNum;
-			cout << "Participant Details Added." << endl;
+			cout << endl << "Participant Details Added." << endl;
 		}
 		//calculates the total fee formula(totalFee = totalFee + fee)
 		totalFee += fee;
 		cout << "Fee: RM" << fee << endl;
-		cout << "Total Amount needed to pay: RM" << totalFee << endl;
 		//prompts the user to add more participants(y or n)
 		char x;
 		cout << "Do you want to add another participant? (y/n): ";
