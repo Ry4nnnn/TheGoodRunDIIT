@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-//func to display race categories and prices
+// function to display race categories and prices
 static void displayPrice() {
 	cout << "------------------------------------------------------------------\n";
 	cout << "       Category        Distance   Fees \n";
@@ -14,42 +14,89 @@ static void displayPrice() {
 	cout << "------------------------------------------------------------------\n";
 }
 
+// function to determine the fee based on category and fee type
+int getFee(std::string feeType, int category)
+{
+	int fee;
+
+	fee = 0;
+	if (category == 1 || category == 2)
+	{
+		//category is equals to 1 or 2
+		if (feeType == "early")
+			fee = 60;
+		else
+			fee = 70;
+	}
+	else if (category == 3 || category == 4)
+	{
+		//category is equals to 3 or 4
+		if (feeType == "early")
+			fee = 50;
+		else
+			fee = 60;
+	}
+	else
+	{
+		//if the program enters here than means category has to be equals to 5
+		if (feeType == "early")
+			fee = 200;
+		else
+			fee = 240;
+	}
+	return (fee);
+}
+
+//function to get the run details be passing in category parameters
+std::string	getRunDetails(int category)
+{
+	std::string runDetails;
+
+	switch (category) {
+		case 1:
+			runDetails = ". 10km Men Open [";
+			break;
+		case 2:
+			runDetails = ". 10km Women Open [";
+			break;
+		case 3:
+			runDetails = ". 5km Men Open [";
+			break;
+		case 4:
+			runDetails = ". 5km Women Open [";
+			break;
+		case 5:
+			runDetails = ". 5km Family Fun Run Malaysian (2Adults + 2Kids 4yrs & above) [";
+			break;
+		default://not necessary
+			cout << "Error: Invalid category!" << endl;
+			break;
+		
+	}
+	return (runDetails);
+}
+
 int main()
 {
-	bool loop = true;
-	double totalFee = 0.0;
+	bool		loop;
+	double		totalFee;
+	int			age;
+	int			fee;
+	int			category;
+	int			familyMember;
 	std::string name;
 	std::string idNum;
-	int	age;
 	std::string contactNum;
-	int category;
-	int fee;
 	std::string feeType;
+	std::string runDetails;
 
-	while (loop == true)
+	loop = true;
+	totalFee = 0;
+	fee = 0;
+	while (loop) 
 	{
-		// prompts the user to input name
-		cout << "Enter Participant name: ";
-		cin >> name;
-		// prompts the user to input id number
-		cout << "Enter IC/Passport Number: ";
-		cin >> idNum;
-		// prompts the user to input age
-		cout << "Enter Age: ";
-		cin >> age;
-		// checks if the age is between 4 and 100
-		while (age < 4 || age > 100)
-		{
-			cout << "Invalid age! Enter a valid age between 4 - 100: ";
-			cin >> age;
-		}
-		//prompts the user to input contact number
-		cout << "Enter Contact Number: ";
-		cin >> contactNum;
-
 		//this line will call displayPrice() function and prints the price and categories for the run
 		displayPrice();
-
 		//prompts the user to select the categories
 		cout << "Select Category (1 - 5): ";
 		cin >> category;
@@ -59,7 +106,6 @@ int main()
 			cout << "Invalid category! Enter a number between 1 - 5: ";
 			cin >> category;
 		}
-		//prompts the user to select the feeType
 		cout << "Enter Fee type (early/normal): ";
 		cin >> feeType;
 		//what if the user input other than early or normal
@@ -68,46 +114,63 @@ int main()
 			cout << "Invalid fee type! Enter 'early' or 'normal': ";
 			cin >> feeType;
 		}
-		if (category == 1 || category == 2)
+		fee = getFee(feeType, category);//calls getFee function to get the fee respectively
+		//prompts the user to select category
+		cout << "Category:" << endl;
+		cout << category << getRunDetails(category) << feeType << "]" << endl;
+		cout << "Fee is RM" << fee << endl;
+		if (category == 5)
 		{
-			//catergory is equals to 1 or 2
-			fee = (feeType == "early") ? 60 : 70;
-		}
-		else if (category == 3 || category == 4)
-		{
-			//category is equals to 3 or 4
-			fee = (feeType == "early") ? 50 : 60;
+			cout << "How many family member are participating? (1-4): ";
+			cin >> familyMember;
+			while (familyMember < 1 || familyMember > 4)
+			{
+                cout << "Invalid number! Enter between 1 and 4: ";
+                cin >> familyMember;
+            }
+			for (int i = 1; i <= familyMember; i++) {
+                cout << "Enter details for Family Member " << i << ":\n";
+                cout << "Name: ";
+				cin.ignore();
+                getline(cin, name);
+                cout << "IC/Passport Number: ";
+                cin >> idNum;
+                cout << "Enter Age: ";
+                cin >> age;
+                while (age < 4 || age > 100) {
+                    cout << "Invalid age! Enter a valid age between 4 - 100: ";
+                    cin >> age;
+                }
+                cout << "Contact Number: ";
+                cin >> contactNum;
+                cout << "Family Member " << i << " Details Recorded.\n";
+            }
 		}
 		else
 		{
-			//if the program enters here than means category has to be equals to 5
-			fee = (feeType == "early") ? 200 : 240;
-			 // If category 5 (Family Run), prompt for 3 more family members
-			 cout << "Category 5 requires 4 participants. Enter details for 3 more family members:\n";
-			 for (int i = 1; i <= 3; i++)
-			 {
-				 int familyAge;
-				 cout << "Family Member " << i << " - Enter Age: ";
-				 cin >> familyAge;
-				 while (familyAge < 4 || familyAge > 100)
-				 {
-					 cout << "Invalid age! Minimum age for Family Run is 4 and Maximum age is 100. Enter again: ";
-					 cin >> familyAge;
-				 }
-			}
+			cout << "Enter Participant name: ";
+			cin.ignore();
+			getline(cin, name);;
+			cout << "Enter IC/Passport Number: ";
+			cin >> idNum;
+			cout << "Enter Age: ";
+			cin >> age;
+			while (age < 4 || age > 100)
+			{
+				cout << "Invalid age! Enter a valid age between 4 - 100: ";
+				cin >> age;
+  			}
+			cout << "Enter Contact Number: ";
+			cin >> contactNum;
+			cout << "Participant Details Added." << endl;
 		}
 		//calculates the total fee formula(totalFee = totalFee + fee)
 		totalFee += fee;
-		//prints the user details (name, idnum, contactnum, fee, totalfee)
-		cout << "Name: " << name << endl;
-		cout << "IC/Passport.No: " << idNum << endl;
-		cout << "Age: " << age << endl;
-		cout << "Contact.No: " << contactNum << endl;
 		cout << "Fee: RM" << fee << endl;
 		cout << "Total Amount needed to pay: RM" << totalFee << endl;
 		//prompts the user to add more participants(y or n)
-		cout << "Do you want to add another participant? (y/n): ";
 		char x;
+		cout << "Do you want to add another participant? (y/n): ";
 		cin >> x;
 		//what if the user inputs other than x or y
 		while (x != 'y' && x != 'n' && x != 'Y' && x != 'N')
