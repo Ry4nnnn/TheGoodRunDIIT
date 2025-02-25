@@ -171,7 +171,7 @@ int main() {
 				cout << MAGENTA << "Participant " << i + 1 << RESET << endl;
 				printSummary(players[i]);
 			}
-			cout << endl << "Your Total Registration Cost: RM " << totalFee << endl;
+			cout << endl << "Your Total Registration Cost: RM" << totalFee << endl;
 		}
 	}
 	return (0);
