@@ -25,18 +25,6 @@ static void displayRunFee(const Participants &p) {
 	cout << RESET;
 }
 
-// static void printSummaryHeader() {
-//     cout << CYAN;
-//     cout << "------------------------------------------------------------------\n";
-//     cout << setw(15) << left << "Name" 
-//          << setw(20) << left << "IC/Passport.No" 
-//          << setw(5)  << left << "Age" 
-//          << setw(15) << left << "Contact.No" 
-//          << setw(10) << left << "Fee" << endl;
-//     cout << "------------------------------------------------------------------\n";
-//     cout << RESET;
-// }
-
 void printSummary(const vector<Participants> &players) {
     cout << CYAN;
     cout << "------------------------------------------------------------------\n";
@@ -190,7 +178,6 @@ int main()
 		}
 	}
 	// Display summary
-    // printSummaryHeader();
     printSummary(players);
 	cout << CYAN << "Your Total Registration Cost: RM " << setw(50) << left << totalFee << RESET << endl;
 	return (0);
